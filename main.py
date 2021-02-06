@@ -17,19 +17,22 @@ def set_target():
     timer_txt["fg"] = "#000000"
 
 
-def stop_timer():
+def stop_timer(time):
     global timer
     window.after_cancel(timer)
+    words = len(target_text["text"].split(" "))
+    wpm = words / (time / 60)
+    timer_txt["text"] = f"{wpm:.2f} words per minute"
     timer_txt["fg"] = "#9bdeac"
     response.delete(0, END)
     timer = None
     window.after(3000, set_target)
 
 
-def stopwatch(count):
+def stopwatch(count):  # count in seconds
     global timer
     if response.get().lower() == target_text["text"].lower():
-        stop_timer()
+        stop_timer(count)
     else:
         ms, seconds = math.modf(count)
         timer_txt["text"] = f"{int(seconds)}:{f'{ms:.2f}'.replace('0.','')}"
